@@ -73,7 +73,7 @@ class CompanyController extends Controller
      */
     public function edit(Company $company)
     {
-        return view('company.edit');
+        return view('company.edit',compact('company'));
     }
 
     /**
@@ -85,7 +85,22 @@ class CompanyController extends Controller
      */
     public function update(Request $request, Company $company)
     {
-        //
+        $data = $request->all();
+        if(isset($data['logo'])){
+            $path = $request->file('logo')->store('public');
+            if($path){
+                Storage::delete("public/".$company->logo);
+                $data['logo'] = $request->logo->hashName();
+            }
+        }
+
+        $company = $company->update($data);
+
+        $signal = $company ? "success" : "error";
+        $message = $company ? "Company updated successfully." : "Fail to update company.";
+        $request->session()->flash('notify', ["signal" => $signal, "message" => $message]);
+
+        return redirect(route('companies.index'));
     }
 
     /**
