@@ -111,6 +111,10 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+        Storage::delete("public/".$company->logo);
+        $company->employees()->delete();
+        $status = $company->delete();
+        $response = $status ? true : false;
+        return $response;
     }
 }

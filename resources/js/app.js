@@ -5,6 +5,7 @@
  */
 
 require('./bootstrap');
+window.Swal = require('sweetalert2');
 window.toastr = require('toastr');
 
 require('./custom');

@@ -29,7 +29,7 @@
                     </thead>
                     <tbody>
                         @foreach($companies as $company)
-                        <tr>
+                        <tr id="C{{$company->id}}">
                             <th scope="row" class="align-middle">
                                 @if($company->logo)
                                 <img src="{{asset('storage/'.$company->logo)}}" alt="" style="max-width: 50px; max-height: 50px;">
@@ -44,7 +44,9 @@
                                 <a class="btn btn-outline-primary btn-sm" href="{{ route('companies.edit',$company->id) }}">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                 </a>
-                                <Button class="btn btn-outline-danger btn-sm" class="delete-data">
+                                <Button class="btn btn-outline-danger btn-sm delete-data"
+                                    data-url="{{route('companies.destroy',$company)}}"
+                                    data-row-id="C{{$company->id}}">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </Button>
                             </td>
