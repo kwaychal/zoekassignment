@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Company;
+use App\Http\Requests\StoreCompanyRequest;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -13,7 +16,10 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        $companies = Company::select('id','name','email','logo','website','created_at')
+                                ->orderBy('created_at','desc')
+                                ->paginate(10);
+        return view('company.index',compact('companies'));
     }
 
     /**
@@ -23,7 +29,7 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        //
+        return view('company.create');
     }
 
     /**
@@ -32,41 +38,52 @@ class CompanyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCompanyRequest $request)
     {
-        //
+        $data = $request->all();
+        if(isset($data['logo'])){
+            $request->file('logo')->store('public');
+            $data['logo'] = $request->logo->hashName();
+        }
+        $company = Company::create($data);
+
+        $signal = $company ? "success" : "error";
+        $message = $company ? "Company added successfully." : "Fail to add company.";
+        $request->session()->flash('notify', ["signal" => $signal, "message" => $message]);
+
+        return redirect(route('companies.index'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Company $company)
     {
-        //
+        return view('company.index',compact('company'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Company $company)
     {
-        //
+        return view('company.edit');
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Company $company)
     {
         //
     }
@@ -74,10 +91,10 @@ class CompanyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Company $company)
     {
         //
     }

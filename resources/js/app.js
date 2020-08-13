@@ -5,6 +5,9 @@
  */
 
 require('./bootstrap');
+window.toastr = require('toastr');
+
+require('./custom');
 
 window.Vue = require('vue');
 
