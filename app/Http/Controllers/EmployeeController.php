@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Company;
 use App\Employee;
+use App\Http\Requests\StoreEmployeeRequest;
 
 class EmployeeController extends Controller
 {
@@ -40,9 +41,17 @@ class EmployeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreEmployeeRequest $request)
     {
-        //
+        $data = $request->all();
+        
+        $employee = Employee::create($data);
+
+        $signal = $employee ? "success" : "error";
+        $message = $employee ? "Employee added successfully." : "Fail to add employee.";
+        $request->session()->flash('notify', ["signal" => $signal, "message" => $message]);
+
+        return redirect(route('employees.index'));
     }
 
     /**
@@ -62,12 +71,12 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Employee $employee)
     {
         $companies = Company::select('id','name')
-                                ->orderedBy('name','asc')
+                                ->orderBy('name','asc')
                                 ->get();
-        return view('employee.edit',compact('companies'));
+        return view('employee.edit',compact('companies','employee'));
     }
 
     /**
@@ -77,9 +86,17 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreEmployeeRequest $request, Employee $employee)
     {
-        //
+        $data = $request->all();
+        
+        $employee = $employee->update($data);
+
+        $signal = $employee ? "success" : "error";
+        $message = $employee ? "Employee updated successfully." : "Fail to update employee.";
+        $request->session()->flash('notify', ["signal" => $signal, "message" => $message]);
+
+        return redirect(route('employees.index'));
     }
 
     /**
@@ -88,8 +105,10 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Employee $employee)
     {
-        //
+        $status = $employee->delete();
+        $response = $status ? true : false;
+        return $response;
     }
 }

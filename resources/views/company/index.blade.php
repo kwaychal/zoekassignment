@@ -52,6 +52,11 @@
                             </td>
                         </tr>
                         @endforeach
+                        @if(count($companies) == 0)
+                            <tr>
+                                <td colspan="5" class="text-center">Please add company.</td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
