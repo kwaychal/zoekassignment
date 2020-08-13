@@ -17,6 +17,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/solution-1', function () {
+    return view('solutions.one');
+});
+
+Route::get('/solution-2', function () {
+    return view('solutions.two');
+});
+
 Auth::routes(['register' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
