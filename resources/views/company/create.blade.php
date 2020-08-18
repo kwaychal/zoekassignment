@@ -31,7 +31,7 @@
             </div>
             <div class="form-group">
                 <label for="name">Company Name</label>
-                <input type="text" class="form-control  @error('logo') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" placeholder="Enter name">
+                <input type="text" class="form-control  @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" placeholder="Enter name">
                 @error('name')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror

@@ -63,7 +63,6 @@
                 let a = parseInt($('#side_1').val());
                 let b = parseInt($('#side_2').val());
                 let c = parseInt($('#side_3').val());
-                console.log(a + b);
                 if(
                     a < (b + c) &&
                     b < (a + c) &&
